@@ -1,4 +1,4 @@
-
+using System.Diagnostics;
 using System.Text.Json;
 using Avalonia.Ide.CompletionEngine;
 using Avalonia.Ide.CompletionEngine.AssemblyMetadata;
@@ -42,7 +42,9 @@ public class Workspace
 
         string content = File.ReadAllText(slnFilePath);
         var package = JsonSerializer.Deserialize<SolutionData>(content);
-        var exeProj = package!.GetExecutableProject();
+
+        string fileName = Path.GetFileNameWithoutExtension(ProjectInfo?.ProjectPath);
+        var exeProj = package.Projects.FirstOrDefault(x => string.Equals(x.Name, fileName, StringComparison.OrdinalIgnoreCase));
 
         return _metadataReader.GetForTargetAssembly(exeProj?.TargetPath ?? "");
     }
