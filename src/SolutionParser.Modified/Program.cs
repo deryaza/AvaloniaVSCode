@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Runtime.InteropServices;
+﻿using System.Collections.Concurrent;
 using System.Text.Json;
 using Microsoft.Build.Construction;
 using Microsoft.Build.Definition;
@@ -12,7 +10,6 @@ if (args.Length < 1)
 {
     throw new ArgumentException("Solution path expected as first argument");
 }
-Console.WriteLine(RuntimeInformation.FrameworkDescription);
 string solution = args[0];
 
 InitializeMSBuilePath(solution);
@@ -91,7 +88,19 @@ static int ExecuteCore(string solution)
     });
 
     string jsonFilePath = Path.Combine(Path.GetTempPath(), $"{Path.GetFileName(solution)}.json");
-    File.WriteAllText(jsonFilePath, jsonStr);
+    int tries = 0;
+    while (true)
+    {
+        try
+        {
+            File.WriteAllText(jsonFilePath, jsonStr);
+            break;
+        }
+        catch (IOException) when (tries++ < 10)
+        {
+            Thread.Sleep(500);
+        }
+    }
 
     Console.WriteLine(jsonStr);
 
