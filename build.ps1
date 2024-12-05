@@ -10,7 +10,7 @@ Write-Output $PWD
 dotnet build $PWD/AvaloniaLSP/AvaloniaLanguageServer/AvaloniaLanguageServer.csproj /property:GenerateFullPaths=true -c Debug --output $PWD/vscode-avalonia/avaloniaServer
 
 # Build  Solution parser
-dotnet build $PWD/SolutionParser/SolutionParser.csproj /property:GenerateFullPaths=true -c Debug --output $PWD/vscode-avalonia/solutionParserTool
+dotnet build $PWD/SolutionParser.Modified/SolutionParser.csproj /property:GenerateFullPaths=true -c Debug --output $PWD/vscode-avalonia/solutionParserTool
 
 Write-Output 🎉 Great success
 
