@@ -7,24 +7,32 @@ import { AppConstants } from "./util/Utilities";
  */
 const dotnetRuntimeVersion = "8.0";
 
+interface IDotnetAcquireResult {
+    dotnetPath: string;
+}
+
 /**
  * Gets the path to the .NET runtime.
  * @returns A promise that resolves to the path to the .NET runtime.
  * @throws An error if the .NET runtime path could not be resolved.
  */
 export async function getDotnetRuntimePath(): Promise<string> {
-	await vscode.commands.executeCommand("dotnet.showAcquisitionLog");
-
-	const commandRes = await vscode.commands.executeCommand<{ dotnetPath: string }>("dotnet.acquire", {
-		version: dotnetRuntimeVersion,
-		requestingExtensionId: AppConstants.extensionId,
+	const path = await vscode.commands.executeCommand<IDotnetAcquireResult>("dotnet.findPath", {
+		
+		acquireContext: {
+			version: dotnetRuntimeVersion,
+			requestingExtensionId: AppConstants.extensionId,
+			mode: 'runtime',
+			installType: 'global',
+			architecture: process.arch
+		},
+		versionSpecRequirement: 'greater_than_or_equal'
 	});
-	const dotnetPath = commandRes!.dotnetPath;
-	if (!dotnetPath) {
+	if (!path) {
 		throw new Error("Could not resolve the dotnet path!");
 	}
 
-	return dotnetPath;
+	return path.dotnetPath;
 }
 
 /**
