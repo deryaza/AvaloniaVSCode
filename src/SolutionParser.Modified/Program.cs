@@ -155,16 +155,9 @@ static Project? GetProjectDetails(string name, string projPath)
 static string GetIntermediateOutputPath(MSProject proj)
 {
     var intermediateOutputPath = proj.GetPropertyValue("IntermediateOutputPath");
-    var iop = Path.Combine(intermediateOutputPath, "Avalonia", "references");
+    var projectPath = proj.GetPropertyValue("ProjectDir");
 
-    if (!Path.IsPathRooted(intermediateOutputPath))
-    {
-        iop = Path.Combine(proj.DirectoryPath ?? "", iop);
-        if (Path.DirectorySeparatorChar == '/')
-            iop = iop.Replace("\\", "/");
-    }
-
-    return iop;
+    return Path.Combine(projectPath, intermediateOutputPath);
 }
 
 record ProjectRecord(string Name, string Path);

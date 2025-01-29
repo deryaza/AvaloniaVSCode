@@ -7,10 +7,10 @@ Push-Location src
 Write-Output $PWD
 
 # Build Avalonia LSP
-dotnet build $PWD/AvaloniaLSP/AvaloniaLanguageServer/AvaloniaLanguageServer.csproj /property:GenerateFullPaths=true -c Debug --output $PWD/vscode-avalonia/avaloniaServer
+dotnet build $PWD/AvaloniaLSP/AvaloniaLanguageServer/AvaloniaLanguageServer.csproj /property:GenerateFullPaths=true -c Release --sc --output $PWD/vscode-avalonia/avaloniaServer
 
 # Build  Solution parser
-dotnet build $PWD/SolutionParser.Modified/SolutionParser.csproj /property:GenerateFullPaths=true --sc --output $PWD/vscode-avalonia/solutionParserTool
+dotnet build $PWD/SolutionParser.Modified/SolutionParser.csproj /property:GenerateFullPaths=true -c Release --sc --output $PWD/vscode-avalonia/solutionParserTool
 
 Write-Output 🎉 Great success
 

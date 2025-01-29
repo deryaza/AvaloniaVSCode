@@ -1,5 +1,6 @@
 ﻿using AvaloniaLanguageServer.Handlers;
 using AvaloniaLanguageServer.Models;
+using Microsoft.Build.Locator;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 
 namespace AvaloniaLanguageServer;
@@ -9,11 +10,23 @@ public class Program
     static ILanguageServer server;
     public static async Task Main(string[] args)
     {
+        InitializeMSBuilePath();
         InitializeLogging();
         server = await LanguageServer.From(ConfigureOptions);
 
         Log.Logger.Information("Language server initialised");
         await server.WaitForExit;
+    }
+
+    static void InitializeMSBuilePath()
+    {
+        var installations = MSBuildLocator.QueryVisualStudioInstances(new VisualStudioInstanceQueryOptions()
+        {
+            DiscoveryTypes = DiscoveryType.DotNetSdk,
+            AllowAllRuntimeVersions = true,
+        });
+
+        MSBuildLocator.RegisterInstance(installations.First());
     }
 
     static void ConfigureOptions(LanguageServerOptions options)
